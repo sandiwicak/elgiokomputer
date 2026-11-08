@@ -1,0 +1,84 @@
+[
+  {
+    "kode": "IJ0621",
+    "harga": "Rp 3.400.000",
+    "judul": "Dell Vostro 3481",
+    "status": "FORSALE",
+    "spesifikasi": [
+      "Processor Intel Core i3-7020U (4 CPUs), ~2.3GHz",
+      "Windows 10 Pro 64-bit",
+      "RAM 4GB DDR4 (1 Slot Kosong)",
+      "SSD 256GB",
+      "VGA Intel HD Graphics 620",
+      "Layar 14 inch HD Display",
+      "Camera, Port USB, Port HDMI, Jack Audio, Dll."
+    ],
+    "kondisi": [
+      "Body Oke Sesuai Foto, Sisanya Pemakaian",
+      "Mesin 100% Aman",
+      "Batre Normal"
+    ],
+    "kelengkapan": [
+      "Unit",
+      "Charger",
+      "Tas / Softcase"
+    ],
+    "lokasi": "Ciledug-Tangerang",
+    "foto": [
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=500&q=60"
+    ]
+  },
+  {
+    "kode": "IJ0622",
+    "harga": "Rp 4.500.000",
+    "judul": "Lenovo ThinkPad T480",
+    "status": "FORSALE",
+    "spesifikasi": [
+      "Processor Intel Core i5-8250U",
+      "RAM 8GB DDR4",
+      "SSD 512GB NVMe",
+      "Layar 14 inch FHD"
+    ],
+    "kondisi": [
+      "Mulus 95%",
+      "Keyboard Nyaman"
+    ],
+    "kelengkapan": [
+      "Unit",
+      "Charger Original"
+    ],
+    "lokasi": "Ciputat",
+    "foto": [
+      "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=500&q=60"
+    ]
+  },
+  {
+    "kode": "IJ0623",
+    "harga": "Rp 7.400.000",
+    "judul": "Forsale, Laptop Dell Vostro 3481",
+    "status": "FORSALE",
+    "spesifikasi": [
+      "Processor Intel Core i37020U (4 CPUs), ~2.3GHz",
+      "Windows 10 Pro 64bit",
+      "RAM 4GB DDR4 (1 Slot Kosong)",
+      "SSD 256GB",
+      "VGA Intel HD Graphics 620",
+      "Layar 14 inch HD Display",
+      "Camera, Port USB, Port HDMI, Jack Audio, Dll."
+    ],
+    "kondisi": [
+      "Body Oke Sesuai Foto, Sisanya Pemakaian",
+      "Mesin 100% Aman",
+      "Batre Normal"
+    ],
+    "kelengkapan": [
+      "Unit",
+      "Charger",
+      "Tas / Softcase"
+    ],
+    "lokasi": "Ciledug-Tangerang",
+    "foto": [
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=500&q=60"
+    ]
+  }
+]

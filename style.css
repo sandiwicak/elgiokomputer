@@ -1,0 +1,16 @@
+.hero-bg {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f8fafc 100%);
+}
+
+/* Font Poppins */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Animasi hover kartu */
+.product-card {
+    transition: transform 0.2s ease-in-out;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+}
