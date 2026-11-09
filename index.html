@@ -105,16 +105,22 @@
     <!-- Load script utama -->
     <script src="script.js"></script>
 
-    <!-- Fancybox JS (Diletakkan paling bawah) -->
+        <!-- Fancybox JS -->
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <script>
         Fancybox.bind("[data-fancybox]", {
+            // Pengaturan untuk galeri foto
             Images: { zoom: true },
+            // Pengaturan untuk popup detail produk (HTML)
+            content: {
+                width: 800,
+                height: "auto",
+            },
             Toolbar: {
                 display: {
-                    left: ["infobar"],
+                    left: [],
                     middle: [],
-                    right: ["zoomIn", "zoomOut", "toggle1to1", "close"],
+                    right: ["close"],
                 },
             },
         });
