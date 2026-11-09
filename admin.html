@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Elgio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }</style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col leading-none">
+                    <span class="text-xl font-bold text-slate-800">ELGIO</span>
+                    <span class="text-xs font-semibold text-blue-600">KOMPUTER</span>
+                </div>
+                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded">ADMIN</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="flex space-x-4 mb-6 border-b border-gray-200">
+            <button onclick="switchTab('tambah')" id="tab-btn-tambah" class="pb-3 px-2 text-blue-600 border-b-2 border-blue-600 font-semibold">Tambah</button>
+            <button onclick="switchTab('kelola')" id="tab-btn-kelola" class="pb-3 px-2 text-gray-500 font-medium">Kelola</button>
+        </div>
+
+        <!-- TAB TAMBAH -->
+        <div id="tab-tambah">
+            <div class="max-w-2xl bg-white p-6 rounded-2xl shadow-sm border">
+                <form id="formTambah" class="space-y-4">
+                    <textarea id="teksAdmin" required rows="10" class="w-full border p-3 rounded font-mono text-sm" placeholder="Paste format lengkap di sini..."></textarea>
+                    
+                    <!-- KALKULATOR HARGA -->
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <p class="text-sm font-semibold text-blue-800 mb-2">Kalkulator Harga Jual (Otomatis)</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-xs text-gray-600">Harga Modal (Rp)</label>
+                                <input type="number" id="hargaModal" placeholder="Contoh: 2400000" class="w-full border p-2 rounded text-sm" oninput="hitungHarga()">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-600">Margin/Untung (Rp)</label>
+                                <input type="number" id="marginHarga" value="1000000" class="w-full border p-2 rounded text-sm" oninput="hitungHarga()">
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <label class="text-xs text-gray-600 font-bold">Harga Jual di Website:</label>
+                            <input type="text" id="hargaJualPreview" readonly class="w-full border p-2 rounded text-sm font-bold text-blue-600 bg-white" placeholder="Rp 0">
+                        </div>
+                    </div>
+
+                    <!-- INPUT FOTO -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Upload Foto (Bisa Pilih Banyak)</label>
+                        <p class="text-xs text-red-500 mb-2">*Foto yang dipilih <b>pertama kali</b> akan otomatis menjadi Sampul Utama di Website.</p>
+                        <input type="file" id="fotoTambah" accept="image/*" multiple required class="w-full border border-gray-300 p-2 rounded-lg bg-gray-50">
+                    </div>
+
+                    <button type="submit" id="btnTambah" class="w-full bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700">Simpan Produk</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB KELOLA -->
+        <div id="tab-kelola" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                <div class="p-4 border-b bg-gray-50 flex justify-between">
+                    <input type="text" id="searchInput" placeholder="Cari..." class="border p-2 rounded text-sm w-1/2">
+                    <span id="totalProduk" class="text-sm text-gray-500 my-auto"></span>
+                </div>
+                <table class="w-full text-left">
+                    <thead><tr class="bg-gray-100 text-sm"><th class="p-3">Produk</th><th class="p-3">Harga</th><th class="p-3">Status</th><th class="p-3 text-center">Aksi</th></tr></thead>
+                    <tbody id="tabelProduk"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT -->
+    <div id="modalEdit" class="fixed inset-0 bg-black/50 hidden z-50 flex justify-end">
+        <div class="bg-white w-full max-w-lg h-full overflow-y-auto p-6" id="modalContent">
+            <div class="flex justify-between mb-4"><h2 class="text-xl font-bold">Edit Produk</h2><button onclick="closeEditModal()" class="text-red-500 text-2xl">&times;</button></div>
+            <form id="formEdit" class="space-y-3">
+                <input type="hidden" id="editId">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="editKode" required class="border p-2 rounded" placeholder="Kode">
+                    <input type="text" id="editHarga" required class="border p-2 rounded" placeholder="Harga">
+                </div>
+                <input type="text" id="editJudul" required class="w-full border p-2 rounded" placeholder="Judul">
+                <textarea id="editSpesifikasi" rows="3" class="w-full border p-2 rounded" placeholder="Spesifikasi (Enter untuk baris baru)"></textarea>
+                <textarea id="editKondisi" rows="2" class="w-full border p-2 rounded" placeholder="Kondisi"></textarea>
+                <textarea id="editKelengkapan" rows="2" class="w-full border p-2 rounded" placeholder="Kelengkapan"></textarea>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="editLokasi" class="border p-2 rounded" placeholder="Lokasi">
+                    <input type="number" id="editUrutan" class="border p-2 rounded" placeholder="Urutan">
+                </div>
+                <div class="border-t pt-2"><label class="text-sm font-bold">Foto</label><div id="editFotoContainer" class="flex flex-wrap gap-2 mt-2"></div>
+                <input type="file" id="editFotoBaru" accept="image/*" multiple class="w-full border p-2 rounded mt-2 text-sm bg-gray-50"></div>
+                <button type="button" onclick="simpanEdit()" id="btnSimpanEdit" class="w-full bg-blue-600 text-white font-bold py-2 rounded mt-4">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxc65Ew6brQEmHaYuKlUfNFJ6tA0uz35TOv_GkecGJYxoQigl-ct_Gc8C_kAZcHZuSyfA/exec';
+        let allProducts = [];
+
+        async function callAPI(payload) {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            return await response.json();
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-tambah').classList.add('hidden');
+            document.getElementById('tab-kelola').classList.add('hidden');
+            document.getElementById('tab-btn-tambah').className = "pb-3 px-2 text-gray-500 font-medium";
+            document.getElementById('tab-btn-kelola').className = "pb-3 px-2 text-gray-500 font-medium";
+            
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('tab-btn-' + tab).className = "pb-3 px-2 text-blue-600 border-b-2 border-blue-600 font-semibold";
+            
+            if (tab === 'kelola') fetchData();
+        }
+
+        async function fetchData() {
+            document.getElementById('tabelProduk').innerHTML = '<tr><td colspan="4" class="p-4 text-center">Memuat...</td></tr>';
+            try {
+                const result = await callAPI({ action: 'ambilData' });
+                if (result.status === 'success') { allProducts = result.data; renderTable(allProducts); } 
+                else { alert("Gagal: " + result.message); }
+            } catch (e) { alert("Error: " + e); }
+        }
+
+        function renderTable(data) {
+            document.getElementById('totalProduk').innerText = `Total: ${data.length}`;
+            const tbody = document.getElementById('tabelProduk');
+            tbody.innerHTML = '';
+            data.forEach(p => {
+                let thumb = 'https://via.placeholder.com/50';
+                if (p.foto) { const f = p.foto.split('|')[0]; if (f.includes('id=')) thumb = `https://wsrv.nl/?url=https://drive.google.com/uc?id=${f.split('id=')[1]}`; }
+                let badge = p.status === 'SOLD' ? '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">SOLD</span>' : '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">FORSALE</span>';
+                if (p.visibilitas === 'draft') badge += ' <span class="bg-gray-200 px-2 py-1 rounded text-xs">DRAFT</span>';
+                
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3 flex items-center gap-3"><img src="${thumb}" class="w-10 h-10 rounded object-cover"><div><div class="font-bold text-sm">${p.judul}</div><div class="text-xs text-gray-500">${p.kode}</div></div></td>
+                        <td class="p-3 text-sm font-semibold text-blue-600">${p.harga}</td>
+                        <td class="p-3 text-center">${badge}</td>
+                        <td class="p-3 text-center space-x-1 flex justify-center items-center">
+                            <button onclick='bukaEdit(${JSON.stringify(p)})' class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-semibold hover:bg-yellow-200">Edit</button>
+                            <button onclick="ubahStatus('${p.id}', '${p.status}')" class="px-2 py-1 rounded text-xs font-semibold ${p.status === 'SOLD' ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-green-100 text-green-700 hover:bg-green-200'}">${p.status === 'SOLD' ? 'Set Forsale' : 'Set Sold'}</button>
+                            <button onclick="ubahVisibilitas('${p.id}', '${p.visibilitas}')" class="px-2 py-1 rounded text-xs font-semibold ${p.visibilitas === 'draft' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">${p.visibilitas === 'draft' ? 'Tampilkan' : 'Sembunyikan'}</button>
+                            <button onclick="hapusProduk('${p.id}')" class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-semibold hover:bg-red-200">Hapus</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', e => {
+            const k = e.target.value.toLowerCase();
+            renderTable(allProducts.filter(p => p.judul.toLowerCase().includes(k) || p.kode.toLowerCase().includes(k)));
+        });
+
+        // --- FUNGSI KALKULATOR HARGA ---
+        function hitungHarga() {
+            const modal = parseFloat(document.getElementById('hargaModal').value) || 0;
+            const margin = parseFloat(document.getElementById('marginHarga').value) || 0;
+            const total = modal + margin;
+            
+            const formatted = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(total);
+            document.getElementById('hargaJualPreview').value = formatted;
+        }
+
+        document.getElementById('formTambah').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnTambah'); btn.innerText = "Memproses..."; btn.disabled = true;
+            const teks = document.getElementById('teksAdmin').value;
+            const files = document.getElementById('fotoTambah').files;
+            
+            if (files.length === 0) { alert("Pilih foto!"); btn.innerText = "Simpan Produk"; btn.disabled = false; return; }
+
+            let data = { action: 'tambah', kode: "", judul: "", harga: "", status: "FORSALE", spesifikasi: "", kondisi: "", kelengkapan: "", lokasi: "" };
+            const kodeM = teks.match(/Kode\s*:\s*(.*)/i); if(kodeM) data.kode = kodeM[1].trim();
+            
+            // HARGA DIAMBIL DARI KALKULATOR
+            data.harga = document.getElementById('hargaJualPreview').value;
+            if (!data.harga || data.harga === "Rp 0") {
+                alert("Isi Harga Modal terlebih dahulu!"); btn.innerText = "Simpan Produk"; btn.disabled = false; return;
+            }
+
+            teks.split('\n').forEach(line => { if(line.toLowerCase().includes('forsale')||line.toLowerCase().includes('laptop')) data.judul = line.replace(/forsale,?/i, '').replace(/\./g, '').trim(); });
+            const extract = (start, end) => { const regex = new RegExp(`${start}\\s*:([\\s\\S]*?)(?=${end}|$)`, 'i'); const m = teks.match(regex); return m ? m[1].trim() : ""; };
+            data.spesifikasi = extract('Spesifikasi', 'Kondisi').replace(/\n/g, '|').replace(/^-/gm, '').trim();
+            data.kondisi = extract('Kondisi', 'Kelengkapan').replace(/\n/g, '|').replace(/^-/gm, '').trim();
+            data.kelengkapan = extract('Kelengkapan', 'Lokasi').replace(/\n/g, '|').replace(/^-/gm, '').trim();
+            const lokM = teks.match(/Lokasi\s*:?\s*(.*)/i); if(lokM) data.lokasi = lokM[1].trim().replace(/\.$/, '');
+
+            const sortedFiles = Array.from(files).sort((a, b) => a.lastModified - b.lastModified);
+            const fPromises = sortedFiles.map(file => new Promise(res => { const r = new FileReader(); r.onload = ev => res({fileName: file.name, fileType: file.type, fileData: ev.target.result}); r.readAsDataURL(file); }));
+            data.files = await Promise.all(fPromises);
+
+            try {
+                const res = await callAPI(data);
+                if (res.status === 'success') { 
+                    alert("✅ " + res.message); 
+                    document.getElementById('formTambah').reset(); 
+                    document.getElementById('hargaJualPreview').value = ''; // Reset kalkulator
+                } else { alert("❌ " + res.message); }
+            } catch (err) { alert("Error: " + err); } finally { btn.innerText = "Simpan Produk"; btn.disabled = false; }
+        });
+
+        function bukaEdit(p) {
+            document.getElementById('editId').value = p.id;
+            document.getElementById('editKode').value = p.kode;
+            document.getElementById('editJudul').value = p.judul;
+            document.getElementById('editHarga').value = p.harga;
+            document.getElementById('editLokasi').value = p.lokasi;
+            document.getElementById('editUrutan').value = p.urutan;
+            document.getElementById('editSpesifikasi').value = p.spesifikasi ? p.spesifikasi.split('|').join('\n') : '';
+            document.getElementById('editKondisi').value = p.kondisi ? p.kondisi.split('|').join('\n') : '';
+            document.getElementById('editKelengkapan').value = p.kelengkapan ? p.kelengkapan.split('|').join('\n') : '';
+            renderEditFotos(p.foto);
+            document.getElementById('modalEdit').classList.remove('hidden');
+        }
+        function closeEditModal() { document.getElementById('modalEdit').classList.add('hidden'); }
+
+        function renderEditFotos(fStr) {
+            const c = document.getElementById('editFotoContainer'); c.innerHTML = '';
+            if(!fStr) return;
+            const fotos = fStr.split('|').filter(f => f);
+            
+            fotos.forEach((url, index) => {
+                let dUrl = url.includes('id=') ? `https://wsrv.nl/?url=https://drive.google.com/uc?id=${url.split('id=')[1]}` : url;
+                const isCover = index === 0;
+                const borderClass = isCover ? 'border-4 border-blue-500' : 'border';
+                const coverLabel = isCover ? '<span class="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-[10px] text-center font-bold py-0.5">SAMPUL</span>' : '';
+
+                c.innerHTML += `
+                    <div class="relative group w-20 h-20">
+                        <img src="${dUrl}" class="w-full h-full object-cover rounded ${borderClass}">
+                        ${coverLabel}
+                        <button type="button" onclick="hapusFotoSpesifik('${url}')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow z-10">&times;</button>
+                        ${!isCover ? `<button type="button" onclick="jadikanSampul('${url}')" class="absolute top-1 left-1 bg-white text-yellow-500 rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow z-10" title="Jadikan Sampul">⭐</button>` : ''}
+                    </div>`;
+            });
+        }
+
+        async function simpanEdit() {
+            const btn = document.getElementById('btnSimpanEdit'); btn.innerText = "Menyimpan..."; btn.disabled = true;
+            const payload = {
+                action: 'edit', id: document.getElementById('editId').value,
+                kode: document.getElementById('editKode').value, judul: document.getElementById('editJudul').value, harga: document.getElementById('editHarga').value,
+                status: 'FORSALE', lokasi: document.getElementById('editLokasi').value, urutan: document.getElementById('editUrutan').value,
+                spesifikasi: document.getElementById('editSpesifikasi').value.replace(/\n/g, '|'),
+                kondisi: document.getElementById('editKondisi').value.replace(/\n/g, '|'),
+                kelengkapan: document.getElementById('editKelengkapan').value.replace(/\n/g, '|')
+            };
+            try {
+                const res = await callAPI(payload);
+                if (res.status === 'success') { alert("✅ " + res.message); closeEditModal(); fetchData(); } else { alert("❌ " + res.message); }
+            } catch (e) { alert("Error: " + e); } finally { btn.innerText = "Simpan Perubahan"; btn.disabled = false; }
+        }
+
+        async function hapusFotoSpesifik(url) {
+            if(!confirm("Hapus foto ini?")) return;
+            try {
+                const res = await callAPI({ action: 'hapusFoto', id: document.getElementById('editId').value, fileUrl: url });
+                if(res.status === 'success') { alert("✅ " + res.message); const p = allProducts.find(x => x.id === document.getElementById('editId').value); renderEditFotos(p.foto.split('|').filter(f => f !== url).join('|')); fetchData(); } else { alert("❌ " + res.message); }
+            } catch (e) { alert("Error: " + e); }
+        }
+
+        document.getElementById('editFotoBaru').addEventListener('change', async function(e) {
+            const files = e.target.files; if(files.length === 0) return;
+            const fPromises = Array.from(files).map(file => new Promise(res => { const r = new FileReader(); r.onload = ev => res({fileName: file.name, fileType: file.type, fileData: ev.target.result}); r.readAsDataURL(file); }));
+            const filesData = await Promise.all(fPromises);
+            try {
+                const res = await callAPI({ action: 'tambahFoto', id: document.getElementById('editId').value, files: filesData });
+                if(res.status === 'success') { alert("✅ " + res.message); fetchData().then(() => renderEditFotos(allProducts.find(p => p.id === document.getElementById('editId').value).foto)); } else { alert("❌ " + res.message); }
+            } catch (e) { alert("Error: " + e); } e.target.value = '';
+        });
+
+        async function hapusProduk(id) {
+            if(!confirm("Hapus produk ini permanen?")) return;
+            try {
+                const res = await callAPI({ action: 'hapusProduk', id: id });
+                if(res.status === 'success') { alert("✅ " + res.message); fetchData(); } else { alert("❌ " + res.message); }
+            } catch (e) { alert("Error: " + e); }
+        }
+
+        async function jadikanSampul(urlToCover) {
+            const id = document.getElementById('editId').value;
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            let fotos = product.foto.split('|').filter(f => f);
+            fotos = fotos.filter(f => f !== urlToCover);
+            fotos.unshift(urlToCover);
+            const newFotoString = fotos.join('|');
+            
+            try {
+                const res = await callAPI({ action: 'editFotoSaja', id: id, foto: newFotoString });
+                if(res.status === 'success') {
+                    alert("✅ Sampul berhasil diubah!");
+                    fetchData().then(() => renderEditFotos(newFotoString));
+                } else {
+                    alert("❌ " + res.message);
+                }
+            } catch(e) { alert("Error: " + e); }
+        }
+
+        async function ubahStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'SOLD' ? 'FORSALE' : 'SOLD';
+            try {
+                const res = await callAPI({ action: 'ubahStatus', id: id, status: newStatus });
+                if(res.status === 'success') { fetchData(); } else { alert("❌ " + res.message); }
+            } catch (e) { alert("Error: " + e); }
+        }
+
+        async function ubahVisibilitas(id, currentVis) {
+            const newVis = currentVis === 'draft' ? 'tampil' : 'draft';
+            try {
+                const res = await callAPI({ action: 'ubahVisibilitas', id: id, visibilitas: newVis });
+                if(res.status === 'success') { fetchData(); } else { alert("❌ " + res.message); }
+            } catch (e) { alert("Error: " + e); }
+        }
+    </script>
+</body>
+</html>

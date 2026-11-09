@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elgio Komputer - Solusi Teknologi</title>
+    <title>
+        Elgio Komputer - Solusi Teknologi
+        <meta name="description" content="Elgio Komputer: Pusat jual beli laptop second berkualitas, jasa perbaikan laptop/PC, dan pembuatan software di Ciputat, Tangerang Selatan.">
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fancybox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -72,12 +80,10 @@
         </div>
     </section>
 
-    <!-- AREA PRODUK (Diisi oleh JS) -->
+    <!-- AREA PRODUK -->
     <section id="produk" class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-slate-900 mb-8">Laptop Second Pilihan</h2>
-            
-            <!-- Container Grid -->
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Kartu produk akan disuntikkan di sini oleh script.js -->
             </div>
@@ -96,6 +102,53 @@
         </div>
     </footer>
 
+    <!-- Load script utama -->
     <script src="script.js"></script>
+
+    <!-- Fancybox JS (Diletakkan paling bawah) -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script>
+        Fancybox.bind("[data-fancybox]", {
+            Images: { zoom: true },
+            Toolbar: {
+                display: {
+                    left: ["infobar"],
+                    middle: [],
+                    right: ["zoomIn", "zoomOut", "toggle1to1", "close"],
+                },
+            },
+        });
+    </script>
+
+    <!-- Local SEO Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ComputerStore",
+      "name": "Elgio Komputer",
+      "image": "https://sandiwicak.github.io/elgiokomputer/hero-image.jpg",
+      "@id": "",
+      "url": "https://sandiwicak.github.io/elgiokomputer/",
+      "telephone": "+628561300145",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jl. Pluto Dalam I No.5, RT.004/RW.005, Cireundeu, Pisangan",
+        "addressLocality": "Ciputat Timur",
+        "addressRegion": "Banten",
+        "postalCode": "15419",
+        "addressCountry": "ID"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "@id": "",
+        "dayOfWeek": [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+        ],
+        "opens": "00:00",
+        "closes": "23:59"
+      }
+    }
+    </script>
+
 </body>
 </html>
